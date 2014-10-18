@@ -99,8 +99,7 @@ void setup() {
   digitalWrite(SROEPin, HIGH);
   digitalWrite(SRLatchPin, LOW);
 
-  // Display welcome message
-  welcomeMessage();
+
 
   // make the pretty LEDs happen
   ledDisplay(2);
@@ -118,17 +117,11 @@ void loop() {
   
   // Initializes the current time to prevent error in case of a rollover between getting elements
   time_t t = now();
-  
-  // Displays welcome message if serial terminal connected after program setup
-  if (Serial && !terminalConnect) { 
-    welcomeMessage();
-    terminalConnect = true;
-  } else if (!Serial && terminalConnect) {
-    terminalConnect = false;
-  }
+
+  digitalClockDisplay();
+  delay(1000);
 
   networkRead(); // Read from network
-  serialRead(); // Read from serial  
 }
 
 
@@ -277,8 +270,6 @@ void handleSerialData(char inData[], byte index) {
     } else {
       Serial.println(" Invalid syntax.");
     }
-  } else if (strcmp(words[0], "time") == 0) {
-    digitalClockDisplay();
   }
 }
 
