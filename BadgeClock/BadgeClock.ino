@@ -99,8 +99,14 @@ void setup() {
   pinMode(SRLatchPin, OUTPUT);
   digitalWrite(SROEPin, HIGH);
   digitalWrite(SRLatchPin, LOW);
-
-
+  
+    while (!Serial.available());
+  // Syncs the current time if available
+  if (Serial.available()) {
+    processSyncMessage();
+  }
+  
+  
 
   // make the pretty LEDs happen
   //ledDisplay(2);
@@ -111,22 +117,25 @@ void setup() {
 
 // This loops forever
 void loop() {
-  // Syncs the current time if available
-  if (Serial.available()) {
-    processSyncMessage();
-  }
-  
+    
   // Initializes the current time to prevent error in case of a rollover between getting elements
   time_t t = now();
 
+  delay(1000);
   digitalClockDisplay();
   delay(1000);
+  
+  setValue(0x4400);
+  delay(10000);
+  setValue(0x0000);
+  
+  delay(1000);
+  Serial.print(trolling\n");
+  delay(1000);
+  
 
-  networkRead(); // Read from network
-<<<<<<< HEAD
-=======
+  //networkRead(); // Read from network
   clockFunction();
->>>>>>> origin/master
 }
 
 
@@ -144,12 +153,17 @@ void networkRead() {
 //The clock function
 void clockFunction(){
  
-if (hour() == 0){
+  Serial.print("damn\n");
+  
+  
+if (hour() == 0 || hour() == 12){
 	while (minute() <5){
 		if (second() % 2 == 0){
 			setValue(0x0000);
+                        delay(998);
 		}else{
 			setValue(0x0001);
+                        delay(998);
 		}
 	}
 	while (minute() < 10){
@@ -381,24 +395,29 @@ else if (hour() == 2 || hour() == 14){
 		}
 	}
 	while (minute() < 50){
+                digitalClockDisplay();
 		if (second() % 2 == 0){
 			setValue(0x4200);
 		}else{
-			setValue(0x4201);
+			setValue(0x4201);                        
 		}
 	}
 	while (minute() < 55){
 		if (second() % 2 == 0){
 			setValue(0x4400);
+                        delay(500);
 		}else{
 			setValue(0x4401);
+                        delay(500);
 		}
 	}
 	while (minute() < 60 && minute() > 50){
 		if (second() % 2 == 0){
 			setValue(0x4800);
+                        delay(500);
 		}else{
 			setValue(0x4801);
+                        delay(500);
 		}
 	}
 }
