@@ -130,7 +130,7 @@ void loop() {
   setValue(0x0000);
   
   delay(1000);
-  Serial.print(trolling\n");
+  Serial.print("trolling\n");
   delay(1000);
   
 
