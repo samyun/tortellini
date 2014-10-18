@@ -46,6 +46,8 @@ void displayDemo();
 
 void processSyncMessage();
 time_t requestSync();
+void digitalClockDisplay();
+void printDigits(int digits);
 
 // Maps commands to integers
 const byte PING   = 0; // Ping
@@ -275,6 +277,8 @@ void handleSerialData(char inData[], byte index) {
     } else {
       Serial.println(" Invalid syntax.");
     }
+  } else if (strcmp(words[0], "time") == 0) {
+    digitalClockDisplay();
   }
 }
 
@@ -483,5 +487,27 @@ time_t requestSync()
 {
   Serial.write(TIME_REQUEST);  
   return 0; // the time will be sent later in response to serial mesg
+}
+
+void digitalClockDisplay(){
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.print(" ");
+  Serial.print(day());
+  Serial.print(" ");
+  Serial.print(month());
+  Serial.print(" ");
+  Serial.print(year()); 
+  Serial.println(); 
+}
+
+void printDigits(int digits){
+  // utility function for digital clock display: prints preceding colon and leading 0
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
 }
 
