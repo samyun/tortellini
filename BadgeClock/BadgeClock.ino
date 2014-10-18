@@ -100,16 +100,14 @@ void setup() {
   digitalWrite(SROEPin, HIGH);
   digitalWrite(SRLatchPin, LOW);
   
-    while (!Serial.available());
+  while (!Serial.available()) {};
   // Syncs the current time if available
-  if (Serial.available()) {
-    processSyncMessage();
-  }
+  processSyncMessage();
   
   
 
   // make the pretty LEDs happen
-  //ledDisplay(2);
+  ledDisplay(2);
   
   
 }
@@ -160,10 +158,10 @@ if (hour() == 0 || hour() == 12){
 	while (minute() <5){
 		if (second() % 2 == 0){
 			setValue(0x0000);
-                        delay(998);
+                        delay(500);
 		}else{
 			setValue(0x0001);
-                        delay(998);
+                        delay(500);
 		}
 	}
 	while (minute() < 10){
@@ -1650,4 +1648,5 @@ void printDigits(int digits){
     Serial.print('0');
   Serial.print(digits);
 }
+
 
