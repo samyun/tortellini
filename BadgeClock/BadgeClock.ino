@@ -25,7 +25,7 @@
 #include <RF24.h>
 #include <SPI.h>
 #include <EEPROM.h>
-#include <time.h>
+#include <Time.h>
 
 void welcomeMessage(void);
 void printHelpText(void);
