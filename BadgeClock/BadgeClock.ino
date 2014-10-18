@@ -41,6 +41,9 @@ void handlePayload(struct payload *);
 void ledDisplay(byte);
 void displayDemo();
 
+void processSyncMessage();
+time_t requestSync();
+
 // Maps commands to integers
 const byte PING   = 0; // Ping
 const byte LED    = 1; // LED pattern
@@ -67,6 +70,10 @@ struct payload{ // Payload structure
 void setup() {
   Serial.begin(9600);
 
+  // Time sync initialization
+  while (!Serial) ;
+  setSyncProvider(requestSync);
+  
   // SPI initializations
   SPI.begin();
   SPI.setBitOrder(MSBFIRST); // nRF requires MSB first
@@ -92,11 +99,21 @@ void setup() {
 
   // make the pretty LEDs happen
   ledDisplay(2);
+  
+  
 }
 
 
 // This loops forever
 void loop() {
+  // Syncs the current time if available
+  if (Serial.available()) {
+    processSyncMessage();
+  }
+  
+  // Initializes the current time to prevent error in case of a rollover between getting elements
+  time_t t = now();
+  
   // Displays welcome message if serial terminal connected after program setup
   if (Serial && !terminalConnect) { 
     welcomeMessage();
@@ -445,5 +462,23 @@ void welcomeMessage(void) {
   Serial.println(hex_addr);
   Serial.print("\nAll commands must be terminated with a carriage return.\r\n"
       "Type 'help' for a list of available commands.\r\n\n> ");
+}
+
+void processSyncMessage() {
+  unsigned long pctime;
+  const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
+
+  if(Serial.find(TIME_HEADER)) {
+     pctime = Serial.parseInt();
+     if( pctime >= DEFAULT_TIME) { // check the integer is a valid time (greater than Jan 1 2013)
+       setTime(pctime); // Sync Arduino clock to the time received on the serial port
+     }
+  }
+}
+
+time_t requestSync()
+{
+  Serial.write(TIME_REQUEST);  
+  return 0; // the time will be sent later in response to serial mesg
 }
 
