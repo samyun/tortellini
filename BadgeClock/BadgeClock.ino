@@ -22,6 +22,9 @@
 // total terminal line length MINUS the rest of the message
 #define MAX_TERMINAL_MESSAGE_LEN  MAX_TERMINAL_LINE_LEN - 14
 
+#define TIME_HEADER  "T"   // Header tag for serial time sync message
+#define TIME_REQUEST  7    // ASCII bell character requests a time sync message 
+
 #include <RF24.h>
 #include <SPI.h>
 #include <EEPROM.h>
