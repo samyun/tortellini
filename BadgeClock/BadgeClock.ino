@@ -122,15 +122,6 @@ void loop() {
   delay(1000);
   digitalClockDisplay();
   delay(1000);
-  
-  setValue(0x4400);
-  delay(10000);
-  setValue(0x0000);
-  
-  delay(1000);
-  Serial.print("trolling\n");
-  delay(1000);
-  
 
   //networkRead(); // Read from network
   clockFunction();
@@ -151,7 +142,7 @@ void networkRead() {
 //The clock function
 void clockFunction(){
  
-  Serial.print("damn\n");
+  digitalWrite(SROEPin, LOW);
   
   
 if (hour() == 0 || hour() == 12){
@@ -1279,6 +1270,8 @@ else if (hour() == 12){
 		}
 	}
 }
+
+  digitalWrite(SROEPin, HIGH);
 
  
 }
